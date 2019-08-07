@@ -21,20 +21,19 @@ export const fetchData = async (url: string, method: string, auth: string) => {
     }
   }).then(res => res.json());
   console.log(response);
-  saveTokenToLocalStorage(response)
+  saveTokenToLocalStorage(response);
   return response;
 };
 
 export const getDataFromFitbit = async (url: string, authCode?: string) => {
-  
   const method = "GET";
   const res = await fetch(url, {
     method,
     headers: {
-      Accept: 'application/json',
-      Authorization: 'Bearer ' + authCode
+      Accept: "application/json",
+      Authorization: "Bearer " + authCode
     }
-  })
+  });
   return res.json().then(res => res);
 };
 
@@ -51,15 +50,18 @@ export async function postApiCallWithConfig(url: string, data: any) {
     .then(response => handleResponseStatus(response));
 }
 
-export const deleteData = async(url: string) => {
-  // const token = getAccessTokenFromStorage()
-  // const config = {
-  //   Authorization: "Bearer " + token,
-  //     "Content-Type": "application/json"
-  // }
-
-  // return axios.delete(url, config)
-}
+export const deleteData = async (url: string) => {
+  const token = getAccessTokenFromStorage();
+  const method = "DELETE";
+  const res = await fetch(url, {
+    method,
+    headers: {
+      Accept: "application/json",
+      Authorization: "Bearer " + token
+    }
+  });
+  return res.json().then(res => res);
+};
 
 const handleResponseStatus = async (response: AxiosResponse) => {
   if ((response && response.status < 200) || response.status >= 300) {

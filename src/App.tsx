@@ -5,7 +5,6 @@ import "./App.css";
 import { clientId, clientSecret } from "./config";
 import { fetchData } from "./api/api";
 import { base64Encoding } from "./util/base64Encoding";
-import Main from "./main";
 import ActivityLogging from "./modules/activityLogging/component/activityLogging";
 
 interface IState {
@@ -57,7 +56,6 @@ const App: React.FC = () => {
   }, [authCode]);
   return (
     <div className="App">
-      <Main />
       <header className="App-header">
         <Button
           color="primary"

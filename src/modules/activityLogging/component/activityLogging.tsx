@@ -15,6 +15,7 @@ import { number, bool } from "prop-types";
 import "react-datepicker/dist/react-datepicker.css";
 import { getAccessToken } from "../../../util/localStorage";
 import { getDataFromFitbit, postApiCallWithConfig } from "../../../api/api";
+import history from "../../../service/history";
 
 const renderActivityOptions = (activity: any) => {
   return (
@@ -28,7 +29,7 @@ interface IProps {
   activities: any;
 }
 
-const ActivityLogging: React.FC<IProps> = () => {
+const ActivityLogging: React.FC<IProps> = (props: any) => {
   const [defaultActivities, setDefaultActivities] = useState({
     categories: [{ activities: [], name: "", id: number }]
   });
@@ -138,6 +139,10 @@ const ActivityLogging: React.FC<IProps> = () => {
     console.log(res);
   };
 
+  const goToActivities =() => {
+    
+    history.push("/activities")
+  }
   return (
     <div>
       <Card style={{ margin: 20 }}>
@@ -193,6 +198,7 @@ const ActivityLogging: React.FC<IProps> = () => {
           <Button color="success" onClick={getActivityList}>
             Activities
           </Button>
+          <Button color="success" onClick={goToActivities}>Logged Activities</Button>
         </CardBody>
       </Card>
     </div>
