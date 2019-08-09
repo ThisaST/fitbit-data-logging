@@ -16,6 +16,8 @@ import "react-datepicker/dist/react-datepicker.css";
 import { getAccessToken } from "../../../util/localStorage";
 import { getDataFromFitbit, postApiCallWithConfig } from "../../../api/api";
 import history from "../../../service/history";
+import { ApplicationState } from "../../../configureStore";
+import { useSelector } from "react-redux";
 
 const renderActivityOptions = (activity: any) => {
   return (
@@ -25,9 +27,7 @@ const renderActivityOptions = (activity: any) => {
   );
 };
 
-interface IProps {
-  activities: any;
-}
+interface IProps {}
 
 const ActivityLogging: React.FC<IProps> = (props: any) => {
   const [defaultActivities, setDefaultActivities] = useState({
@@ -42,6 +42,9 @@ const ActivityLogging: React.FC<IProps> = (props: any) => {
   const [durationMillis, setDurationMillis] = useState(0);
   const [date, setDate] = useState(new Date());
 
+  const isAuthenticated = useSelector(({ auth }: ApplicationState) => ({
+    isAuth: auth.isAuthenticated
+  }));
   // const getData = async () => {
   //   const accessToken = getAccessToken();
   //   const defaultActivities = await getDataFromFitbit(
@@ -51,7 +54,17 @@ const ActivityLogging: React.FC<IProps> = (props: any) => {
   //   console.log(defaultActivities);
   //   setDefaultActivities(defaultActivities);
   // };
-  useEffect(() => {}, []);
+
+  console.log(isAuthenticated);
+  useEffect(() => {
+    console.log(isAuthenticated);
+    getActivityList();
+    setTimeout(() => {
+      if (isAuthenticated.isAuth) {
+        getActivityList();
+      }
+    }, 100);
+  }, []);
 
   const getActivityList = async () => {
     const accessToken = getAccessToken();
@@ -61,11 +74,11 @@ const ActivityLogging: React.FC<IProps> = (props: any) => {
     );
     console.log(defaultActivities);
     setDefaultActivities(defaultActivities);
-    console.log(
-      defaultActivities.categories.forEach((element: { name: any }) => {
-        console.log(element.name);
-      })
-    );
+    // console.log(
+    //   defaultActivities.categories.forEach((element: { name: any }) => {
+    //     console.log(element.name);
+    //   })
+    // );
     let activityMapClone = new Map();
     for (var i = 0; i < defaultActivities.categories.length; i++) {
       activityMapClone.set(
@@ -139,10 +152,9 @@ const ActivityLogging: React.FC<IProps> = (props: any) => {
     console.log(res);
   };
 
-  const goToActivities =() => {
-    
-    history.push("/activities")
-  }
+  const goToActivities = () => {
+    history.push("/activities");
+  };
   return (
     <div>
       <Card style={{ margin: 20 }}>
@@ -195,10 +207,12 @@ const ActivityLogging: React.FC<IProps> = (props: any) => {
               Submit
             </Button>
           </form>
-          <Button color="success" onClick={getActivityList}>
+          {/* <Button color="success" onClick={getActivityList}>
             Activities
+          </Button> */}
+          <Button color="success" onClick={goToActivities}>
+            Logged Activities
           </Button>
-          <Button color="success" onClick={goToActivities}>Logged Activities</Button>
         </CardBody>
       </Card>
     </div>

@@ -6,14 +6,17 @@ import { Store, createStore, applyMiddleware } from 'redux';
 import { ActivityState, DeleteActivityState } from './modules/activities/loggedActivities/types/types';
 import activitySaga from './modules/activities/loggedActivities/sagas/saga';
 import createSagaMiddleware from '@redux-saga/core';
+import { AuthState } from './modules/auth/types/types';
+import authSaga from './modules/auth/sagas/sagas';
 
 export interface ApplicationState {
-  activity : ActivityState,
+  activity : ActivityState
   deleteActivity : DeleteActivityState
+  auth : AuthState
 }
 
 export function* rootSaga() {
-  yield all([fork(activitySaga)])
+  yield all([fork(activitySaga), fork(authSaga)])
 }
 
 export function configureStore(initialState?: ApplicationState): Store<ApplicationState> {

@@ -1,20 +1,21 @@
 import React from "react";
 import { Route, Switch } from "react-router";
+import { BrowserRouter } from "react-router-dom";
 
 import LoggedActivities from "./modules/activities/loggedActivities/component/loggedActivities";
 import App from "./App";
-import Main from "./main";
-
+import LoginView from "./modules/auth/components/loginView";
+import history from "./service/history";
 export const foo = "foo";
 
 const Routes: React.FC = () => (
   <>
-    <Main/>
-    <Switch>
-      <Route exact path="/" component={App} />
-      <Route path="/activities" component={LoggedActivities} />
-      <Route component={() => <div>Not Found</div>} />
-    </Switch>
+      <Switch>
+        <Route exact path="/" component={LoginView} />
+        <Route path="/home" component={App} />
+        <Route path="/activities" component={LoggedActivities} />
+        <Route component={() => <div>Not Found</div>} />
+      </Switch>
   </>
 );
 

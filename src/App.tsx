@@ -12,7 +12,7 @@ interface IState {
 }
 const openAuthenticationUsingFitbit = () => {
   const url =
-    "https://www.fitbit.com/oauth2/authorize?response_type=code&client_id=22DNVH&redirect_uri=http%3A%2F%2F127.0.0.1%3A3000%2F&scope=activity%20heartrate%20location%20nutrition%20profile%20settings%20sleep%20social%20weight&expires_in=604800";
+    "https://www.fitbit.com/oauth2/authorize?response_type=code&client_id=22DNVH&redirect_uri=http%3A%2F%2F127.0.0.1%3A3000%2F&scope=activity%20heartrate%20location%20nutrition%20profile%20settings%20sleep%20social%20weight&expires_in=31536000";
   window.open(url, "_self");
 };
 
@@ -39,11 +39,10 @@ const App: React.FC = () => {
   const [authCode, setAuthCode] = useState("");
   useEffect(() => {
     const url = window.location.href;
-    const authCodes = getParameterByName("code", url);
-    if (authCodes) {
-      setAuthCode(authCodes);
-    }
-    console.log(authCode);
+    // const authCodes = getParameterByName("code", url);
+    // if (authCodes) {
+    //   setAuthCode(authCodes);
+    // }
     // const basicAuthCode = base64Encoding(clientId + ":" + clientSecret);
     // const accessTokenRequestUrl =
     //   "https://api.fitbit.com/oauth2/token?client_id=" +
@@ -57,42 +56,18 @@ const App: React.FC = () => {
   return (
     <div className="App">
       <header className="App-header">
-        <Button
-          color="primary"
-          className="Button"
-          onClick={openAuthenticationUsingFitbit}
-          style={{ margin: 20 }}
-        >
-          Auth Fitbit
-        </Button>
-        <Button
+        {/* <Button
           color="primary"
           className="Button"
           onClick={() => getAccessTokenFromFitbit(authCode)}
           style={{ margin: 20 }}
         >
           Get Access Token
-        </Button>
-        <ActivityLogging activities={activities} />
+        </Button> */}
+        <ActivityLogging />
       </header>
     </div>
   );
 };
-
-const activities = [
-  {
-    activityId: 13030,
-    activityName: "Eating (sitting)"
-  },
-  {
-    activityId: 13040,
-    activityName:
-      "Grooming (washing, shaving, brushing teeth, washing hands, putting on make-up), sitting or standing"
-  },
-  {
-    activityId: 13045,
-    activityName: "Hairstyling"
-  }
-];
 
 export default App;

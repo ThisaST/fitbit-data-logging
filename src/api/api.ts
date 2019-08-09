@@ -69,6 +69,7 @@ const handleResponseStatus = async (response: AxiosResponse) => {
     error.response = await response;
 
     if (response.status === 401) {
+      
     }
     throw error;
   }

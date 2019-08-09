@@ -3,16 +3,21 @@ import ReactDOM from "react-dom";
 import * as serviceWorker from "./serviceWorker";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Provider } from "react-redux";
-import {configureStore, history} from "./configureStore";
+import {configureStore} from "./configureStore";
+import history from './service/history'
 import {ConnectedRouter} from "connected-react-router";
 import 'bootstrap/dist/css/bootstrap.css';
 import Routes from "./routes";
+import Header from "./shared/header";
 
 const store = configureStore()
 ReactDOM.render(
   <Provider store={store}>
     <ConnectedRouter history={history}>
+      <>
+      <Header/>
       <Routes/>
+      </>
     </ConnectedRouter>
   </Provider>,
 
