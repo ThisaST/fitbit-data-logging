@@ -6,11 +6,15 @@ import {
   Label,
   Input,
   CardHeader,
-  Button
+  Button,
+  CardText,
+  CardTitle,
+  CardImg
 } from "reactstrap";
 import _map from "lodash/map";
 import DatePicker from "react-datepicker";
 import { number, bool } from "prop-types";
+import { Container, Row, Col } from "reactstrap";
 
 import "react-datepicker/dist/react-datepicker.css";
 import { getAccessToken } from "../../../util/localStorage";
@@ -18,6 +22,10 @@ import { getDataFromFitbit, postApiCallWithConfig } from "../../../api/api";
 import history from "../../../service/history";
 import { ApplicationState } from "../../../configureStore";
 import { useSelector } from "react-redux";
+import TimePicker from "antd/lib/time-picker";
+import "antd/dist/antd.css";
+import moment from "moment";
+import FitnessImage from "../../../assets/wellness-lander.png";
 
 const renderActivityOptions = (activity: any) => {
   return (
@@ -114,9 +122,8 @@ const ActivityLogging: React.FC<IProps> = (props: any) => {
     setDate(newDate);
   };
 
-  const startTimeChange = (start: React.ChangeEvent<HTMLInputElement>) => {
-    const value = start.currentTarget.value;
-    setStartTime(value);
+  const startTimeChange = (time: any, timeString: any) => {
+    setStartTime(timeString);
   };
 
   const durationChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -152,70 +159,132 @@ const ActivityLogging: React.FC<IProps> = (props: any) => {
     console.log(res);
   };
 
+  function changeStartTime(value: any) {
+    console.log(value);
+  }
   const goToActivities = () => {
     history.push("/activities");
   };
+  function onChange(time: any, timeString: any) {
+    console.log(timeString);
+  }
   return (
-    <div>
-      <Card style={{ margin: 20 }}>
-        <CardHeader>Activity Logging</CardHeader>
-        <CardBody>
-          <form>
-            <FormGroup>
-              <Label for="categories">Category</Label>
-              <Input
-                type="select"
-                name="select"
-                id="categories"
-                onChange={event => selectionChange(event)}
-              >
-                {_map(defaultActivities.categories, renderActivityCategories)}
-              </Input>
-            </FormGroup>
+    <Container md="6" fluid>
+      <Row>
+        <Col md="7">
+          <Card style={{ margin: 20 }}>
+            <CardHeader>Activity Logging</CardHeader>
+            <CardBody>
+              <form>
+                <Row className="m-2 mb-4">
+                  <Col md="2">
+                    <Label for="categories">Category</Label>
+                  </Col>
+                  <Col>
+                    <Input
+                      type="select"
+                      name="select"
+                      id="categories"
+                      onChange={event => selectionChange(event)}
+                    >
+                      {_map(
+                        defaultActivities.categories,
+                        renderActivityCategories
+                      )}
+                    </Input>
+                  </Col>
+                </Row>
+                <Row className="m-2 mb-4">
+                  <Col md="2">
+                    <Label>Activities</Label>
+                  </Col>
+                  <Col>
+                    <Input
+                      type="select"
+                      name="select"
+                      id="categories"
+                      onChange={event => activitySelectionChange(event)}
+                    >
+                      {_map(activities.activities, renderActivityOptions)}
+                    </Input>
+                  </Col>
+                </Row>
+                <Row className="m-2 mb-4">
+                  <Col md="2">
+                    <Label>Duration</Label>
+                  </Col>
+                  <Col>
+                    <Input
+                      type="text"
+                      name="time"
+                      placeholder="Duration"
+                      onChange={event => durationChange(event)}
+                    />
+                  </Col>
+                </Row>
+                <Row className="m-2 mb-4">
+                  <Col md="2">
+                    <Label>Start Time</Label>
+                  </Col>
+                  <Col>
+                    <TimePicker
+                      defaultValue={moment(new Date(), "HH:mm:ss")}
+                      onChange={startTimeChange}
+                    />
+                  </Col>
+                </Row>
+                <Row className="m-2 mb-4">
+                  <Col md="2">
+                    <Label>Date</Label>
+                  </Col>
+                  <Col>
+                    <DatePicker
+                      selected={date}
+                      onChange={changeDate}
+                      maxDate={new Date()}
+                      dateFormat="MMMM d, yyyy"
+                    />
+                  </Col>
+                </Row>
+                <Row>
+                  <Col md={{ size: 4, offset: 9 }}>
+                    <Button
+                      color="primary"
+                      type="button"
+                      onClick={logActivityData}
+                    >
+                      Submit
+                    </Button>
+                  </Col>
+                </Row>
+              </form>
+            </CardBody>
+          </Card>
+        </Col>
+        <Col md="4">
+          <Card style={{ margin: 20 }}>
+            <CardHeader>
+              <CardTitle>
+                <b>Logged Activities</b>
+              </CardTitle>
+            </CardHeader>
 
-            <FormGroup>
-              <Label>Activities</Label>
-              <Input
-                type="select"
-                name="select"
-                id="categories"
-                onChange={event => activitySelectionChange(event)}
-              >
-                {_map(activities.activities, renderActivityOptions)}
-              </Input>
-            </FormGroup>
-            <FormGroup>
-              <Input
-                type="text"
-                name="time"
-                placeholder="Duration"
-                onChange={event => durationChange(event)}
-              />
-            </FormGroup>
-            <Input
-              type="text"
-              onChange={startTimeChange}
-              placeholder="Start time in HH:MM:SS format"
+            <CardImg
+              top
+              width="50%"
+              height="80%"
+              src={FitnessImage}
+              alt="Card image cap"
             />
-            <DatePicker
-              selected={date}
-              onChange={changeDate}
-              maxDate={new Date()}
-              dateFormat="MMMM d, yyyy"
-            />
-            <Button color="primary" type="button" onClick={logActivityData}>
-              Submit
-            </Button>
-          </form>
-          {/* <Button color="success" onClick={getActivityList}>
-            Activities
-          </Button> */}
-          <Button color="success" onClick={goToActivities}>
-            Logged Activities
-          </Button>
-        </CardBody>
-      </Card>
-    </div>
+            <CardBody>
+              <Button color="success" onClick={goToActivities}>
+                View Logged Activities
+              </Button>
+            </CardBody>
+          </Card>
+        </Col>
+      </Row>
+    </Container>
   );
 };
 
