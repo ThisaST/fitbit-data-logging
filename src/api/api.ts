@@ -20,7 +20,6 @@ export const fetchData = async (url: string, method: string, auth: string) => {
       "Content-Type": "application/x-www-form-urlencoded"
     }
   }).then(res => res.json());
-  console.log(response);
   saveTokenToLocalStorage(response);
   return response;
 };

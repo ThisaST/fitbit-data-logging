@@ -13,7 +13,6 @@ function* getLoggedActivities(action: any) {
     let url : string
     if(action.payload != null) {
       url = action.payload
-      console.log(action)
     }
     else {
       url = "https://api.fitbit.com/1/user/-/activities/list.json?beforeDate=2019-08-04&sort=desc&limit=5&offset=0"
@@ -30,7 +29,6 @@ function* getLoggedActivities(action: any) {
 
 function* deleteLoggedActivity(action: any) {
   try {
-    console.log(action)
     const response = yield call(
       deleteData,
       "https://api.fitbit.com/1/user/-/activities/" +

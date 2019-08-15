@@ -7,18 +7,16 @@ export const initialState: AuthState = {
   accessTokenLoading: false,
   authCode: "",
   authCodeError: undefined,
-  isAuthenticated : false
+  isAuthenticated: false
 };
 
 const reducer: Reducer<AuthState> = (state = initialState, action) => {
   switch (action.type) {
     case AuthActionTypes.GET_AUTHENTICATION_CODE: {
-      console.log(action)
-      return { ...state, activitiesLoading: true, authCode : action.payload };
+      return { ...state, activitiesLoading: true, authCode: action.payload };
     }
     case AuthActionTypes.GET_AUTHENTICATION_CODE_SUCCESS: {
-      console.log(action.payload);
-      return { ...state,  };
+      return { ...state };
     }
     case AuthActionTypes.GET_AUTHENTICATION_CODE_ERROR: {
       return {
@@ -28,14 +26,14 @@ const reducer: Reducer<AuthState> = (state = initialState, action) => {
       };
     }
     case AuthActionTypes.GET_ACCESS_TOKEN: {
-      return { ...state, accessTokenLoading: true,  };
+      return { ...state, accessTokenLoading: true };
     }
     case AuthActionTypes.GET_ACCESS_TOKEN_SUCCESS: {
       return {
         ...state,
         accessTokenLoading: false,
         accessToken: action.payload,
-        isAuthenticated : true
+        isAuthenticated: true
       };
     }
     case AuthActionTypes.GET_ACCESS_TOKEN_ERROR: {
@@ -43,7 +41,7 @@ const reducer: Reducer<AuthState> = (state = initialState, action) => {
         ...state,
         accessTokenLoading: false,
         accessTokenError: action.payload,
-        isAuthenticated : false
+        isAuthenticated: false
       };
     }
     default: {

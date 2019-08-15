@@ -31,7 +31,6 @@ const reducer: Reducer<ActivityState> = (state = initialState, action) => {
       return { ...state, activitiesLoading: true };
     }
     case LoggedActivityTypes.GET_LOGGED_ACTIVITIES_SUCCESS: {
-      console.log(action.payload);
       return { ...state, activitiesLoading: false, activities: action.payload };
     }
     case LoggedActivityTypes.GET_LOGGED_ACTIVITIES_ERROR: {
@@ -45,7 +44,6 @@ const reducer: Reducer<ActivityState> = (state = initialState, action) => {
       return { ...state, activitiesLoading: true };
     }
     case LoggedActivityTypes.DELETE_LOGGED_ACTIVITY_SUCCESS: {
-      console.log(action.payload);
       return { ...state, response: action.payload };
     }
     case LoggedActivityTypes.DELETE_LOGGED_ACTIVITY_ERROR: {

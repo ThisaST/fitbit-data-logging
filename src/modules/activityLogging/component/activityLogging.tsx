@@ -2,14 +2,12 @@ import React, { useState, useEffect } from "react";
 import {
   Card,
   CardBody,
-  FormGroup,
   Label,
   Input,
   CardHeader,
   Button,
-  CardText,
   CardTitle,
-  CardImg
+  CardImg,
 } from "reactstrap";
 import _map from "lodash/map";
 import DatePicker from "react-datepicker";
@@ -26,6 +24,7 @@ import TimePicker from "antd/lib/time-picker";
 import "antd/dist/antd.css";
 import moment from "moment";
 import FitnessImage from "../../../assets/wellness-lander.png";
+import AddActivityModal from "./addActivityModal";
 
 const renderActivityOptions = (activity: any) => {
   return (
@@ -46,9 +45,11 @@ const ActivityLogging: React.FC<IProps> = (props: any) => {
     activities: [{ name: "", id: number, hasSpeed: bool }]
   });
   const [activityId, setActivityId] = useState(0);
-  const [startTime, setStartTime] = useState("");
+  const [startTime, setStartTime] = useState("00:00:00");
   const [durationMillis, setDurationMillis] = useState(0);
   const [date, setDate] = useState(new Date());
+  const [modalState, setModalState] = useState(false);
+  const [modalMessage, setModalMessage] = useState("");
 
   const isAuthenticated = useSelector(({ auth }: ApplicationState) => ({
     isAuth: auth.isAuthenticated
@@ -63,9 +64,7 @@ const ActivityLogging: React.FC<IProps> = (props: any) => {
   //   setDefaultActivities(defaultActivities);
   // };
 
-  console.log(isAuthenticated);
   useEffect(() => {
-    console.log(isAuthenticated);
     getActivityList();
     setTimeout(() => {
       if (isAuthenticated.isAuth) {
@@ -80,7 +79,6 @@ const ActivityLogging: React.FC<IProps> = (props: any) => {
       "https://api.fitbit.com/1/activities.json",
       accessToken
     );
-    console.log(defaultActivities);
     setDefaultActivities(defaultActivities);
     // console.log(
     //   defaultActivities.categories.forEach((element: { name: any }) => {
@@ -106,19 +104,16 @@ const ActivityLogging: React.FC<IProps> = (props: any) => {
   const selectionChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.currentTarget.value;
     setActivities(activityMap.get(Number(value)));
-    console.log(activities);
   };
 
   const activitySelectionChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     const value = event.currentTarget.value;
-    console.log(value);
     setActivityId(Number(value));
   };
 
   const changeDate = (newDate: any) => {
-    console.log(newDate);
     setDate(newDate);
   };
 
@@ -153,21 +148,24 @@ const ActivityLogging: React.FC<IProps> = (props: any) => {
       "&date=" +
       formatDate(date);
 
-    console.log(url);
     const res = await postApiCallWithConfig(url, null);
-    alert(res.status);
-    console.log(res);
+    if (res) {
+      if (res.status === 201) {
+        setModalMessage("Successfully Added..");
+      } else if(Error) {
+        setModalMessage("Error occured...");
+      }
+      setModalState(true);
+    }
   };
 
-  function changeStartTime(value: any) {
-    console.log(value);
-  }
+  const handleModalState = () => {
+    setModalState(!modalState);
+  };
+
   const goToActivities = () => {
     history.push("/activities");
   };
-  function onChange(time: any, timeString: any) {
-    console.log(timeString);
-  }
   return (
     <Container md="6" fluid>
       <Row>
@@ -284,6 +282,11 @@ const ActivityLogging: React.FC<IProps> = (props: any) => {
           </Card>
         </Col>
       </Row>
+      <AddActivityModal
+        message={modalMessage}
+        modalState={modalState}
+        handleModalState={handleModalState}
+      />
     </Container>
   );
 };

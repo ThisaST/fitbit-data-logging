@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect } from "react";
 import { Button } from "reactstrap";
 import { clientId, clientSecret } from "../../config";
 import { base64Encoding } from "../../util/base64Encoding";
@@ -14,13 +14,14 @@ const openAuthenticationUsingFitbit = () => {
 };
 
 const AuthButton: React.FC = () => {
+
   const dispatch = useDispatch();
+
   const isAuthenticated = useSelector(({ auth }: ApplicationState) => ({
     authCodes: auth ? auth.isAuthenticated : false
   }));
-  console.log(isAuthenticated);
+
   const getAccessTokenFromFitbit = (authCode: string) => {
-    console.log("getTokenMethod");
     const basicAuthCode = base64Encoding(clientId + ":" + clientSecret);
     const accessTokenRequestUrl =
       "https://api.fitbit.com/oauth2/token?client_id=" +
@@ -30,7 +31,6 @@ const AuthButton: React.FC = () => {
     dispatch(
       getAccessToken({ url: accessTokenRequestUrl, authCode: basicAuthCode })
     );
-    // fetchData(accessTokenRequestUrl, "POST", basicAuthCode);
   };
 
   const getParameterByName = (name: string, url: string) => {
@@ -43,40 +43,34 @@ const AuthButton: React.FC = () => {
     return decodeURIComponent(results[2].replace(/\+/g, " "));
   };
 
+  const updateAuth = async (authCode: string) => {
+    if (authCode !== "" && !isAuthenticated.authCodes) {
+      await dispatch(getAuthenticationCode(authCode));
+      await getAccessTokenFromFitbit(authCode);
+    }
+
+    setTimeout(() => {
+      if (isAuthenticated.authCodes) {
+        history.push("/home");
+      }
+    }, 1000);
+  };
+
   useEffect(() => {
     const url = window.location.href;
     const authCode = getParameterByName("code", url) || "";
-    if (authCode != "") {
-      dispatch(getAuthenticationCode(authCode));
-      getAccessTokenFromFitbit(authCode);
-    }
+    updateAuth(authCode);
+  }, [isAuthenticated.authCodes]);
 
-    // if (authenticationCode.authCode != null) {
-    //   console.log(authenticationCode);
-    //   getAccessTokenFromFitbit(authenticationCode.authCode);
-    // }
-    // const basicAuthCode = base64Encoding(clientId + ":" + clientSecret);
-    // const accessTokenRequestUrl =
-    //   "https://api.fitbit.com/oauth2/token?client_id=" +
-    //   clientId +
-    //   "&redirect_uri=http%3A%2F%2F127.0.0.1%3A3000%2F&grant_type=authorization_code&code=" +
-    //   authCodes;
-    // fetchData(accessTokenRequestUrl, "POST", basicAuthCode);
-    // const accessToken = getAccessToken();
-    // console.log(accessToken);
-  }, []);
-
-  const redirectToHome = () => {
-    if (isAuthenticated.authCodes) {
-      history.push("/home");
-    }
-  };
   return (
     <>
-      <Button color="primary" onClick={openAuthenticationUsingFitbit} disabled={isAuthenticated ? isAuthenticated.authCodes : false}>
+      <Button
+        color="primary"
+        onClick={openAuthenticationUsingFitbit}
+        disabled={isAuthenticated ? isAuthenticated.authCodes : false}
+      >
         Authentication
       </Button>
-      <Button onClick={redirectToHome}>Login</Button>
     </>
   );
 };

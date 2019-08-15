@@ -32,7 +32,6 @@ const LoggedActivities = () => {
     "https://api.fitbit.com/1/user/-/activities/list.json?beforeDate=" +
     formatDate(beforeDate) +
     "&sort=desc&limit=5&offset=0";
-  console.log(loggedActivities.pagination.next);
   useEffect(() => {
     dispatch(getLoggedActivities(url));
   }, [dispatch]);
@@ -71,7 +70,7 @@ const LoggedActivities = () => {
     setAfterDate(date);
     let url =
       "https://api.fitbit.com/1/user/-/activities/list.json?afterDate=" +
-      formatDate(date) +
+      formatDate(afterDate) +
       "&sort=desc&limit=5&offset=0";
     dispatch(getLoggedActivities(url));
   };
